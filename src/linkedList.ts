@@ -1,0 +1,20 @@
+import { LinkedList } from './model/LinkedList';
+
+const list = new LinkedList<number>();
+list.push(1);
+list.push(2);
+list.push(3);
+list.push(4);
+list.push(5);
+list.push(6);
+list.printList();
+console.log('---');
+list.getHead();
+console.log('---');
+list.getTail();
+console.log('---');
+list.getLength();
+console.log('---');
+list.reverse();
+list.printList();
+console.log('---');
