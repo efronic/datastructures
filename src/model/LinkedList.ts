@@ -166,5 +166,31 @@ export class LinkedList<T> {
         }
         return this;
     }
+    findMiddleNode(): Node<T> | null {
+        if (!this.head) return null;
+        let slow = this.head;
+        let fast: Node<T> | null = this.head!;
+
+        while (fast && fast.next) {
+            slow = slow.next!;
+            fast = fast!.next!.next;
+        }
+        return slow;
+    }
+    hasLoop() {
+        if (!this.head) return false;
+        let slow = this.head!;
+        let fast = this.head!;
+
+        while (fast && fast.next) {
+            slow = slow.next!;
+            fast = fast.next!.next!;
+            if (slow === fast) {
+                return true;
+            }
+        }
+        return false;
+
+    }
 }
 

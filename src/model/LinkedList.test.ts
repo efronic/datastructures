@@ -117,8 +117,8 @@ test('LinkedList remove at head and tail', () => {
   list.push(3);
   const headRemoved = list.remove(0);
   const tailRemoved = list.remove(1); // tail is now at index 1
-assert.ok(headRemoved !== false && headRemoved?.value === 1);
-assert.ok(tailRemoved !== false && tailRemoved?.value === 3);
+  assert.ok(headRemoved !== false && headRemoved?.value === 1);
+  assert.ok(tailRemoved !== false && tailRemoved?.value === 3);
 });
 
 test('LinkedList remove with invalid index', () => {
@@ -170,4 +170,91 @@ test('LinkedList head/tail consistency after multiple operations', () => {
   assert.equal(list.head?.value, 1);
   assert.equal(list.tail?.value, 2);
   assert.equal(list.length, 2);
+});
+
+test('LinkedList findMiddleNode returns correct node', () => {
+  const list = new LinkedList<number>();
+  // Empty list
+  assert.equal(list.findMiddleNode(), null);
+
+  // Odd number of elements
+  list.push(1);
+  list.push(2);
+  list.push(3);
+  assert.equal(list.findMiddleNode()?.value, 2);
+
+  // Even number of elements
+  list.push(4);
+  assert.equal(list.findMiddleNode()?.value, 3);
+});
+
+test('LinkedList findMiddleNode edge cases', () => {
+  // Single element
+  const single = new LinkedList<number>();
+  single.push(99);
+  assert.equal(single.findMiddleNode()?.value, 99);
+
+  // Two elements
+  const two = new LinkedList<number>();
+  two.push(1);
+  two.push(2);
+  assert.equal(two.findMiddleNode()?.value, 2);
+
+  // Five elements
+  const five = new LinkedList<number>();
+  [10, 20, 30, 40, 50].forEach(v => five.push(v));
+  assert.equal(five.findMiddleNode()?.value, 30);
+
+  // Remove elements and check again
+  five.pop();
+  five.pop();
+  assert.equal(five.findMiddleNode()?.value, 20);
+});
+
+test('LinkedList hasLoop detects loops', () => {
+  const list = new LinkedList<number>();
+  // No loop in empty list
+  assert.equal(list.hasLoop(), false);
+
+  // No loop in normal list
+  list.push(1);
+  list.push(2);
+  list.push(3);
+  assert.equal(list.hasLoop(), false);
+
+  // Create a loop manually: tail.next = head
+  if (list.tail && list.head) {
+    list.tail.next = list.head;
+  }
+  assert.equal(list.hasLoop(), true);
+});
+
+test('LinkedList hasLoop edge cases', () => {
+  // Single node, no loop
+  const single = new LinkedList<number>();
+  single.push(1);
+  assert.equal(single.hasLoop(), false);
+
+  // Single node, self-loop
+  if (single.head) single.head.next = single.head;
+  assert.equal(single.hasLoop(), true);
+
+  // Two nodes, second points to first
+  const two = new LinkedList<number>();
+  two.push(1);
+  two.push(2);
+  if (two.head && two.head.next) two.head.next.next = two.head;
+  assert.equal(two.hasLoop(), true);
+
+  // Three nodes, last points to middle
+  const three = new LinkedList<number>();
+  three.push(1);
+  three.push(2);
+  three.push(3);
+  if (three.head && three.head.next && three.tail) three.tail.next = three.head.next;
+  assert.equal(three.hasLoop(), true);
+
+  // Remove loop and check again
+  if (three.tail) three.tail.next = null;
+  assert.equal(three.hasLoop(), false);
 });
