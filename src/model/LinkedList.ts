@@ -192,5 +192,110 @@ export class LinkedList<T> {
         return false;
 
     }
+    removeDuplicates() {
+        const seen = new Set();
+        let prev = null;
+        let current = this.head;
+
+        while (current !== null) {
+            if (seen.has(current.value)) {
+                // Duplicate found, skip this node
+                prev!.next = current.next;
+                this.length--; // Decrement the length
+            } else {
+                // First time seeing this value, add to set
+                seen.add(current.value);
+                prev = current; // Move prev forward
+            }
+            current = current.next; // Move current forward
+        }
+    }
+    binaryToDecimal() {
+        let current = this.head;
+        let decimalValue = 0;
+        while (current) {
+            if (
+                typeof current.value !== 'number' ||
+                !Number.isInteger(current.value) ||
+                (current.value !== 0 && current.value !== 1)
+            ) {
+                throw new Error('LinkedList is not a binary linked list. All values must be integers 0 or 1.');
+            }
+            decimalValue = decimalValue * 2 + current.value;
+            current = current.next;
+        }
+        return decimalValue;
+    }
+    partitionList(x: number): void {
+        const dummy1 = new Node<T>(0 as T);
+        const dummy2 = new Node<T>(0 as T);
+
+        let prev1 = dummy1;
+        let prev2 = dummy2;
+        let current = this.head;
+
+        while (current !== null) {
+            const nextNode = current.next;
+            current.next = null;
+
+            if (typeof current.value === "number" && current.value < x) {
+                prev1.next = current;
+                prev1 = prev1.next;
+            } else {
+                prev2.next = current;
+                prev2 = prev2.next;
+            }
+
+            current = nextNode;
+        }
+
+        prev1.next = dummy2.next;
+        this.head = dummy1.next;
+    }
+
+
+    reverseBetween(m: number, n: number): void {
+        if (this.head === null || m === n) return;
+
+        const dummy = new Node<T>(0 as T); // Need a dummy with default generic
+        dummy.next = this.head;
+        let prev: Node<T> = dummy;
+
+        for (let i = 0; i < m; i++) {
+            if (!prev.next) return;
+            prev = prev.next;
+        }
+
+        let current = prev.next!;
+        for (let i = 0; i < n - m; i++) {
+            const nodeToMove = current.next!;
+            current.next = nodeToMove.next;
+            nodeToMove.next = prev.next;
+            prev.next = nodeToMove;
+        }
+
+        this.head = dummy.next;
+    }
+
+
+    swapPairs(): void {
+        const dummy = new Node<T>(0 as T);
+        dummy.next = this.head;
+
+        let prev = dummy;
+
+        while (prev.next && prev.next.next) {
+            const first = prev.next;
+            const second = first.next!;
+
+            first.next = second.next;
+            second.next = first;
+            prev.next = second;
+            prev = first;
+        }
+
+        this.head = dummy.next;
+    }
+
 }
 

@@ -258,3 +258,107 @@ test('LinkedList hasLoop edge cases', () => {
   if (three.tail) three.tail.next = null;
   assert.equal(three.hasLoop(), false);
 });
+
+test('LinkedList removeDuplicates removes duplicate values', () => {
+  const list = new LinkedList<number>();
+  [1, 2, 2, 3, 1, 4, 4].forEach(v => list.push(v));
+  list.removeDuplicates();
+  const values = [];
+  let node = list.head;
+  while (node) {
+    values.push(node.value);
+    node = node.next;
+  }
+  assert.deepEqual(values, [1, 2, 3, 4]);
+  assert.equal(list.length, 4);
+});
+
+test('LinkedList binaryToDecimal returns correct decimal value', () => {
+  const list = new LinkedList<number>();
+  [1, 0, 1, 1].forEach(v => list.push(v)); // binary 1011 = 11
+  assert.equal(list.binaryToDecimal(), 11);
+
+  const list2 = new LinkedList<number>();
+  [0, 0, 0].forEach(v => list2.push(v));
+  assert.equal(list2.binaryToDecimal(), 0);
+
+  const list3 = new LinkedList<number>();
+  [1].forEach(v => list3.push(v));
+  assert.equal(list3.binaryToDecimal(), 1);
+});
+
+test('LinkedList binaryToDecimal throws on non-binary values', () => {
+  const list = new LinkedList<number>();
+  [1, 2, 0].forEach(v => list.push(v));
+  assert.throws(() => list.binaryToDecimal());
+});
+
+test('LinkedList partitionList partitions nodes around x', () => {
+  const list = new LinkedList<number>();
+  [1, 4, 3, 2, 5, 2].forEach(v => list.push(v));
+  list.partitionList(3);
+  // All nodes < 3 should come before nodes >= 3
+  const values = [];
+  let node = list.head;
+  while (node) {
+    values.push(node.value);
+    node = node.next;
+  }
+  // Valid partition: [1,2,2,4,3,5] or [2,2,1,4,3,5] etc. (order within partitions preserved)
+  const idx = values.findIndex(v => v >= 3);
+  assert.ok(idx > 0);
+  assert.ok(values.slice(0, idx).every(v => v < 3));
+  assert.ok(values.slice(idx).every(v => v >= 3));
+});
+
+test('LinkedList reverseBetween reverses sublist', () => {
+  const list = new LinkedList<number>();
+  [1, 2, 3, 4, 5].forEach(v => list.push(v));
+  list.reverseBetween(1, 3); // reverse [2,3,4] -> [4,3,2]
+  const values = [];
+  let node = list.head;
+  while (node) {
+    values.push(node.value);
+    node = node.next;
+  }
+  assert.deepEqual(values, [1, 4, 3, 2, 5]);
+});
+
+test('LinkedList reverseBetween with m == n does nothing', () => {
+  const list = new LinkedList<number>();
+  [1, 2, 3].forEach(v => list.push(v));
+  list.reverseBetween(1, 1);
+  const values = [];
+  let node = list.head;
+  while (node) {
+    values.push(node.value);
+    node = node.next;
+  }
+  assert.deepEqual(values, [1, 2, 3]);
+});
+
+test('LinkedList swapPairs swaps adjacent nodes', () => {
+  const list = new LinkedList<number>();
+  [1, 2, 3, 4].forEach(v => list.push(v));
+  list.swapPairs();
+  const values = [];
+  let node = list.head;
+  while (node) {
+    values.push(node.value);
+    node = node.next;
+  }
+  assert.deepEqual(values, [2, 1, 4, 3]);
+});
+
+test('LinkedList swapPairs with odd number of nodes', () => {
+  const list = new LinkedList<number>();
+  [1, 2, 3].forEach(v => list.push(v));
+  list.swapPairs();
+  const values = [];
+  let node = list.head;
+  while (node) {
+    values.push(node.value);
+    node = node.next;
+  }
+  assert.deepEqual(values, [2, 1, 3]);
+});
